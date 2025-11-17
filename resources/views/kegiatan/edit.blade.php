@@ -1,60 +1,37 @@
-<x-app-layout>
+@extends('layouts.app')
 
-    <x-slot name="header">
-        <h2 class="text-xl font-semibold">Edit Riwayat Kegiatan</h2>
-    </x-slot>
+@section('title', 'Edit Kegiatan')
 
-    <div class="p-6">
+@section('content')
+    <div class="container mt-3">
+        <h3 class="mb-3">Edit Kegiatan</h3>
 
-        <form method="POST" action="{{ route('kegiatan.update', $kegiatan->id) }}" enctype="multipart/form-data">
-            @csrf
-            @method('PUT')
+        <div class="card">
+            <div class="card-body">
+                <form action="{{ route('kegiatan.update', $kegiatan->id) }}" method="POST">
+                    @csrf
+                    @method('PUT')
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="mb-3">
+                        <label>Nama Kegiatan</label>
+                        <input type="text" name="nama_kegiatan" class="form-control" value="{{ $kegiatan->nama_kegiatan }}"
+                            required>
+                    </div>
 
-                <div>
-                    <label>Nama Anggota</label>
-                    <select name="anggota_id" class="w-full rounded">
-                        @foreach ($anggota as $a)
-                            <option value="{{ $a->id }}" {{ $kegiatan->anggota_id == $a->id ? 'selected' : '' }}>
-                                {{ $a->nama }}
-                            </option>
-                        @endforeach
-                    </select>
-                </div>
+                    <div class="mb-3">
+                        <label>Tanggal</label>
+                        <input type="date" name="tanggal" class="form-control" value="{{ $kegiatan->tanggal }}" required>
+                    </div>
 
-                <div>
-                    <label>Nama Kegiatan</label>
-                    <input type="text" name="nama_kegiatan" value="{{ $kegiatan->nama_kegiatan }}" class="w-full rounded">
-                </div>
+                    <div class="mb-3">
+                        <label>Deskripsi</label>
+                        <textarea name="deskripsi" class="form-control" rows="3">{{ $kegiatan->deskripsi }}</textarea>
+                    </div>
 
-                <div>
-                    <label>Tanggal</label>
-                    <input type="date" name="tanggal" value="{{ $kegiatan->tanggal }}" class="w-full rounded">
-                </div>
-
-                <div>
-                    <label>Keterangan</label>
-                    <input type="text" name="keterangan" value="{{ $kegiatan->keterangan }}" class="w-full rounded">
-                </div>
-
-                <div class="col-span-2">
-                    <label>Foto Bukti (optional)</label>
-                    <input type="file" name="foto_bukti" class="w-full">
-
-                    @if ($kegiatan->foto_bukti)
-                        <img src="{{ asset('storage/'.$kegiatan->foto_bukti) }}" class="h-20 mt-2 rounded">
-                    @endif
-                </div>
-
-                <div class="col-span-2">
-                    <button class="px-4 py-2 bg-blue-600 text-white rounded">Update</button>
-                </div>
-
+                    <button class="btn btn-warning">Update</button>
+                    <a href="{{ route('kegiatan.index') }}" class="btn btn-secondary">Kembali</a>
+                </form>
             </div>
-
-        </form>
-
+        </div>
     </div>
-
-</x-app-layout>
+@endsection

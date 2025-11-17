@@ -1,53 +1,35 @@
-<x-app-layout>
+@extends('layouts.app')
 
-    <x-slot name="header">
-        <h2 class="text-xl font-semibold">Tambah Riwayat Kegiatan</h2>
-    </x-slot>
+@section('title', 'Tambah Kegiatan')
 
-    <div class="p-6">
+@section('content')
+    <div class="container mt-3">
+        <h3 class="mb-3">Tambah Kegiatan</h3>
 
-        <form method="POST" action="{{ route('kegiatan.store') }}" enctype="multipart/form-data">
-            @csrf
+        <div class="card">
+            <div class="card-body">
+                <form action="{{ route('kegiatan.store') }}" method="POST">
+                    @csrf
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="mb-3">
+                        <label>Nama Kegiatan</label>
+                        <input type="text" name="nama_kegiatan" class="form-control" required>
+                    </div>
 
-                <div>
-                    <label>Nama Anggota</label>
-                    <select name="anggota_id" class="w-full rounded" required>
-                        @foreach ($anggota as $a)
-                            <option value="{{ $a->id }}">{{ $a->nama }}</option>
-                        @endforeach
-                    </select>
-                </div>
+                    <div class="mb-3">
+                        <label>Tanggal</label>
+                        <input type="date" name="tanggal" class="form-control" required>
+                    </div>
 
-                <div>
-                    <label>Nama Kegiatan</label>
-                    <input type="text" name="nama_kegiatan" class="w-full rounded" required>
-                </div>
+                    <div class="mb-3">
+                        <label>Deskripsi</label>
+                        <textarea name="deskripsi" class="form-control" rows="3"></textarea>
+                    </div>
 
-                <div>
-                    <label>Tanggal Kegiatan</label>
-                    <input type="date" name="tanggal" class="w-full rounded" required>
-                </div>
-
-                <div>
-                    <label>Keterangan</label>
-                    <input type="text" name="keterangan" class="w-full rounded">
-                </div>
-
-                <div class="col-span-2">
-                    <label>Foto Bukti (optional)</label>
-                    <input type="file" name="foto_bukti" class="w-full">
-                </div>
-
-                <div class="col-span-2">
-                    <button class="px-4 py-2 bg-blue-600 text-white rounded">Simpan</button>
-                </div>
-
+                    <button class="btn btn-success">Simpan</button>
+                    <a href="{{ route('kegiatan.index') }}" class="btn btn-secondary">Kembali</a>
+                </form>
             </div>
-
-        </form>
-
+        </div>
     </div>
-
-</x-app-layout>
+@endsection

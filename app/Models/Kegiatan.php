@@ -2,20 +2,27 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Kegiatan extends Model
 {
+    use HasFactory;
+
     protected $fillable = [
-        'anggota_id',
         'nama_kegiatan',
         'tanggal',
-        'keterangan',
+        'tempat',
+        'deskripsi',
         'foto_bukti'
     ];
 
-    public function anggota()
+    protected $dates = ['tanggal'];
+
+    public function anggotas()
     {
-        return $this->belongsTo(Anggota::class);
+        return $this->belongsToMany(Anggota::class, 'anggota_kegiatan')
+                    ->withPivot('peran')
+                    ->withTimestamps();
     }
 }
