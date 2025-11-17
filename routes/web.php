@@ -1,9 +1,10 @@
 <?php
 
 use App\Http\Controllers\AnggotaController;
-use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\OtpVerificationController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ExportController;
+use App\Http\Controllers\GolonganController;
 use App\Http\Controllers\KegiatanController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
@@ -16,10 +17,14 @@ Route::middleware(['auth'])->group(function () {
         ->name('dashboard');
 
     // CRUD anggota
-    Route::resource('/anggota', AnggotaController::class);
-    Route::resource('/kegiatan', KegiatanController::class);
+    Route::resource('anggota', AnggotaController::class);
+    Route::resource('kegiatan', KegiatanController::class);
+    Route::resource('golongan', GolonganController::class);
 
-    // Profile
+    Route::post('kegiatan/{kegiatan}/peserta', [KegiatanController::class, 'addParticipant'])->name('kegiatan.addParticipant');
+    Route::delete('kegiatan/{kegiatan}/peserta/{anggota}', [KegiatanController::class, 'removeParticipant'])->name('kegiatan.removeParticipant');
+    Route::get('kegiatan/{kegiatan}/peserta', [KegiatanController::class, 'manageParticipants'])->name('kegiatan.manageParticipants');
+// Profile
     Route::middleware(['auth'])->group(function () {
         Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
         Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -27,6 +32,10 @@ Route::middleware(['auth'])->group(function () {
     });
 
 });
+
+// export
+Route::get('export/anggota/excel', [ExportController::class, 'exportAnggotaExcel'])->name('export.anggota.excel');
+Route::get('export/kegiatan/pdf', [ExportController::class, 'exportKegiatanPdf'])->name('export.kegiatan.pdf');
 
 // =============== OTP ===============
 Route::get('/verify-otp', [OtpVerificationController::class, 'showForm'])->name('verify.otp.form');
@@ -52,6 +61,5 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/settings/update-password', [\App\Http\Controllers\SettingsController::class, 'updatePassword'])->name('settings.update.password');
     Route::post('/settings/update-photo', [\App\Http\Controllers\SettingsController::class, 'updatePhoto'])->name('settings.update.photo');
 });
-
 
 require __DIR__ . '/auth.php';

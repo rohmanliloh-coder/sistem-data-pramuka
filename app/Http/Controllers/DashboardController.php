@@ -4,27 +4,24 @@ namespace App\Http\Controllers;
 
 use App\Models\Anggota;
 use App\Models\Kegiatan;
-use Illuminate\Http\Request;
+use App\Models\Golongan;
 
 class DashboardController extends Controller
 {
     public function index()
     {
-        // Hitung data ringkasan
         $totalAnggota = Anggota::count();
         $totalKegiatan = Kegiatan::count();
+        $totalGolongan = Golongan::count();
 
-        // Ambil 5 kegiatan terbaru
-        $kegiatanTerbaru = Kegiatan::latest()->take(5)->get();
+        $recentKegiatan = Kegiatan::orderBy('tanggal','desc')->limit(5)->get();
+        $recentAnggota = Anggota::orderBy('created_at','desc')->limit(5)->get();
 
-        // Ambil 5 anggota terbaru
-        $anggotaBaru = Anggota::latest()->take(5)->get();
+        // kegiatan with most participants (top 5)
+        $popular = Kegiatan::withCount('anggotas')->orderBy('anggotas_count','desc')->limit(5)->get();
 
-        return view('dashboard.index', compact(
-            'totalAnggota',
-            'totalKegiatan',
-            'kegiatanTerbaru',
-            'anggotaBaru'
+        return view('dashboard', compact(
+            'totalAnggota','totalKegiatan','totalGolongan','recentKegiatan','recentAnggota','popular'
         ));
     }
 }
